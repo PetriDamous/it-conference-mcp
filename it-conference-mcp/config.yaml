@@ -1,0 +1,14 @@
+endpoint: http://localhost:4000
+schema:
+  source: local
+  path: ./schema.graphql
+operations:
+  source: local
+  paths:
+    - ./operations/
+transport:
+  type: streamable_http
+  address: 127.0.0.1
+  port: 8000
+  # path: /mcp
+  # stateful_mode: true

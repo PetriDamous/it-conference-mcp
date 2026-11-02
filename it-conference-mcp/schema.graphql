@@ -1,0 +1,81 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Room {
+  id: ID!
+  name: String
+  capacity: Int
+}
+
+type Speaker {
+  id: ID!
+  first: String
+  last: String
+  favorite: Boolean
+  firstLast: String
+  cursor: String
+  sessions: [Session]
+}
+
+type PageInfo {
+  totalItemCount: Int
+  lastCursor: String
+  hasNextPage: Boolean
+}
+
+type SpeakerResults {
+  datalist: [Speaker]
+  pageInfo: PageInfo
+}
+
+type Session {
+  id: ID!
+  title: String!
+  eventYear: String
+  cursor: String
+  room: Room
+}
+
+type SesssionResults {
+  datalist: [Session]
+  pageInfo: PageInfo
+}
+
+type Query {
+  speakers(offset: Int = 0, limit: Int = -1): SpeakerResults
+  speakersConcat(limit: Int = -1, afterCursor: String = ""): SpeakerResults
+  sessionsConcat(limit: Int = -1, afterCursor: String = ""): SesssionResults
+}
+
+type Mutation {
+  addSpeaker(input: SpeakerInput): Speaker
+  toggleSpeakerFavorite(speakerId: ID!): Speaker
+  deleteSpeaker(speakerId: ID!): Speaker
+}
+
+enum CacheControlScope {
+  PUBLIC
+  PRIVATE
+}
+
+input SpeakerInput {
+  first: String
+  last: String
+  favorite: Boolean
+}
+
+directive @cacheControl(maxAge: Int, scope: CacheControlScope, inheritMaxAge: Boolean) on FIELD_DEFINITION | OBJECT | INTERFACE | UNION
+
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!,
+) on SCALAR
+
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
